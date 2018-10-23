@@ -14,6 +14,8 @@
 		BB7ED41E214169AE004855E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB7ED41C214169AE004855E3 /* LaunchScreen.storyboard */; };
 		BB7ED42921416B57004855E3 /* TabItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7ED42721416B57004855E3 /* TabItemCell.swift */; };
 		BB7ED42A21416B57004855E3 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7ED42821416B57004855E3 /* TabView.swift */; };
+		BB8C536B217ECAFE00ADA66B /* WYTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8C536A217ECAFE00ADA66B /* WYTabView.m */; };
+		BB8C536E217EF94D00ADA66B /* WYTabItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8C536D217EF94D00ADA66B /* WYTabItemCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,11 @@
 		BB7ED41F214169AE004855E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB7ED42721416B57004855E3 /* TabItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabItemCell.swift; sourceTree = "<group>"; };
 		BB7ED42821416B57004855E3 /* TabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
+		BB8C5368217ECAFE00ADA66B /* TabView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TabView-Bridging-Header.h"; sourceTree = "<group>"; };
+		BB8C5369217ECAFE00ADA66B /* WYTabView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYTabView.h; sourceTree = "<group>"; };
+		BB8C536A217ECAFE00ADA66B /* WYTabView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYTabView.m; sourceTree = "<group>"; };
+		BB8C536C217EF94D00ADA66B /* WYTabItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYTabItemCell.h; sourceTree = "<group>"; };
+		BB8C536D217EF94D00ADA66B /* WYTabItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYTabItemCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +72,7 @@
 				BB7ED41A214169AE004855E3 /* Assets.xcassets */,
 				BB7ED41C214169AE004855E3 /* LaunchScreen.storyboard */,
 				BB7ED41F214169AE004855E3 /* Info.plist */,
+				BB8C5368217ECAFE00ADA66B /* TabView-Bridging-Header.h */,
 			);
 			path = TabView;
 			sourceTree = "<group>";
@@ -72,6 +80,7 @@
 		BB7ED42521416B22004855E3 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				BB8C5366217ECAD100ADA66B /* Objective-C */,
 				BB7ED42621416B2B004855E3 /* Swift */,
 			);
 			path = Source;
@@ -84,6 +93,17 @@
 				BB7ED42821416B57004855E3 /* TabView.swift */,
 			);
 			path = Swift;
+			sourceTree = "<group>";
+		};
+		BB8C5366217ECAD100ADA66B /* Objective-C */ = {
+			isa = PBXGroup;
+			children = (
+				BB8C5369217ECAFE00ADA66B /* WYTabView.h */,
+				BB8C536A217ECAFE00ADA66B /* WYTabView.m */,
+				BB8C536C217EF94D00ADA66B /* WYTabItemCell.h */,
+				BB8C536D217EF94D00ADA66B /* WYTabItemCell.m */,
+			);
+			path = "Objective-C";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,6 +138,7 @@
 				TargetAttributes = {
 					BB7ED40F214169AD004855E3 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -159,7 +180,9 @@
 			files = (
 				BB7ED416214169AD004855E3 /* ViewController.swift in Sources */,
 				BB7ED42921416B57004855E3 /* TabItemCell.swift in Sources */,
+				BB8C536E217EF94D00ADA66B /* WYTabItemCell.m in Sources */,
 				BB7ED42A21416B57004855E3 /* TabView.swift in Sources */,
+				BB8C536B217ECAFE00ADA66B /* WYTabView.m in Sources */,
 				BB7ED414214169AD004855E3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +327,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6Q3X7AW5CU;
 				INFOPLIST_FILE = TabView/Info.plist;
@@ -313,7 +337,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.josscii.TabView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_OBJC_BRIDGING_HEADER = "TabView/TabView-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -322,6 +348,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6Q3X7AW5CU;
 				INFOPLIST_FILE = TabView/Info.plist;
@@ -331,7 +358,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.josscii.TabView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_OBJC_BRIDGING_HEADER = "TabView/TabView-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

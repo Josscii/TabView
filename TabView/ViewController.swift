@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     
     var tabView1: TabView!
     var tabView2: TabView!
+    var tabView3: WYTabView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +49,16 @@ class ViewController: UIViewController {
         tabView2.isIndicatorGestureDriven = true
         tabView2.register(TabItemCell.self, forCellWithReuseIdentifier: TabItemCell.reuseIdentifier)
         view.addSubview(tabView2)
+        
+        tabView3 = WYTabView(frame: CGRect(x: 0, y: 200, width: view.bounds.width, height: 60), coordinatedScrollView: scrollView)
+        tabView3.delegate = self
+        tabView3.backgroundColor = .brown
+        tabView3.widthType = .fixed
+        tabView3.fixedWidth = 80
+        tabView3.isItemGestureDriven = true
+        tabView3.isIndicatorGestureDriven = true
+        tabView3.register(WYTabItemCell.self, forCellWithReuseIdentifier: WYTabItemCell.reuseIdentifer())
+        view.addSubview(tabView3)
     }
 
     func addSubViewsToScrollView(with count: Int) {
@@ -65,6 +76,44 @@ extension ViewController: UIScrollViewDelegate {
     
 }
 
+extension ViewController: WYTabViewDelegate {
+    func number(ofItems tabView: WYTabView) -> Int {
+        return items.count
+    }
+    
+    func tabView(_ tabView: WYTabView, cellForItemAt index: Int) -> WYTabItem {
+        let item = tabView.dequeueReusableCell(withReuseIdentifier:WYTabItemCell.reuseIdentifer(), for: index) as! WYTabItemCell
+        item.normalTextColor = .white
+        item.selectedTextColor = .green
+        item.selectedTextFontBold = true
+        item.selectedTextFontSize = 20
+        item.titleLabel.text = items[index]
+        return item
+    }
+    
+    func tabView(_ tabView: WYTabView, didSelectItemAt index: Int) {
+        scrollView.setContentOffset(CGPoint(x: view.bounds.width * CGFloat(index), y: 0), animated: false)
+        tabView.selectItem(at: index)
+    }
+    
+    func tabView(_ tabView: WYTabView, indicatorWithSuperView superView: UIView) -> UIView {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.layer.cornerRadius = 10
+        view.translatesAutoresizingMaskIntoConstraints = false
+        superView.addSubview(view)
+        view.topAnchor.constraint(equalTo: superView.topAnchor, constant: 10).isActive = true
+        view.leftAnchor.constraint(equalTo: superView.leftAnchor).isActive = true
+        view.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -10).isActive = true
+        view.rightAnchor.constraint(equalTo: superView.rightAnchor).isActive = true
+        return view
+    }
+    
+    func tabView(_ tabView: WYTabView, updateIndicator indicator: UIView, withProgress progress: CGFloat) {
+        
+    }
+}
+
 extension ViewController: TabViewDelegate {
     func numberOfItems(in tabView: TabView) -> Int {
         return items.count
@@ -74,7 +123,8 @@ extension ViewController: TabViewDelegate {
         let item = tabView.dequeueReusableCell(withReuseIdentifier: TabItemCell.reuseIdentifier, for: index) as! TabItemCell
         item.normalTextColor = .white
         item.selectedTextColor = .green
-        item.selectedTextFont = UIFont.systemFont(ofSize: 19)
+        item.selectedTextFontBold = true
+        item.selectedTextFontSize = 20
         item.titleLabel.text = items[index]
         return item
     }

@@ -18,10 +18,12 @@ public class TabItemCell: UICollectionViewCell {
     public var normalTextColor: UIColor = .black
     /// title label's selected text color
     public var selectedTextColor: UIColor = .red
-    /// title label's normal text font
-    public var normalTextFont: UIFont = .systemFont(ofSize: 17)
-    /// title label's selected text font
-    public var selectedTextFont: UIFont = .systemFont(ofSize: 17)
+    /// title label's normal text font size
+    public var normalTextFontSize: CGFloat = 17
+    /// title label's selected text font size
+    public var selectedTextFontSize: CGFloat = 17
+    /// if the selected item's font is bold
+    public var selectedTextFontBold = false
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,9 +48,6 @@ public class TabItemCell: UICollectionViewCell {
 
 extension TabItemCell {
     private func fontTransform(with progress: CGFloat) {
-        let selectedTextFontSize = selectedTextFont.pointSize
-        let normalTextFontSize = normalTextFont.pointSize
-        
         if selectedTextFontSize != normalTextFontSize {
             let scale: CGFloat
             
@@ -69,26 +68,39 @@ extension TabItemCell {
     }
     
     private func colorTransform(with progress: CGFloat) {
-        titleLabel.textColor = UIColor.interpolate(from: normalTextColor, to: selectedTextColor, with: progress)
+        let f = min(1, max(0, progress))
+        
+        var r1: CGFloat = 0; var g1: CGFloat = 0; var b1: CGFloat = 0; var a1: CGFloat = 0
+        var r2: CGFloat = 0; var g2: CGFloat = 0; var b2: CGFloat = 0; var a2: CGFloat = 0
+        
+        normalTextColor.getRed(&r1, green: &g1, blue: &b1, alpha: &a1);
+        selectedTextColor.getRed(&r2, green: &g2, blue: &b2, alpha: &a2);
+        
+        let r = r1 + (r2 - r1) * f;
+        let g = g1 + (g2 - g1) * f;
+        let b = b1 + (b2 - b1) * f;
+        let a = a1 + (a2 - a1) * f;
+        
+        titleLabel.textColor = UIColor(red: r, green: g, blue: b, alpha: a)
     }
     
     private func updateTitleFont(selected: Bool) {
-        if selectedTextFont.pointSize > normalTextFont.pointSize {
-            titleLabel.font = selectedTextFont
-        } else if (selectedTextFont.pointSize < normalTextFont.pointSize) {
-            titleLabel.font = normalTextFont
-        } else {
-            if selected {
-                titleLabel.font = selectedTextFont
+        if selectedTextFontSize >= normalTextFontSize {
+            if selected && selectedTextFontBold {
+                titleLabel.font = UIFont.boldSystemFont(ofSize: selectedTextFontSize)
             } else {
-                titleLabel.font = normalTextFont
+                titleLabel.font = UIFont.systemFont(ofSize: selectedTextFontSize)
+            }
+        } else if selectedTextFontSize < normalTextFontSize {
+            if selected && selectedTextFontBold {
+                titleLabel.font = UIFont.boldSystemFont(ofSize: normalTextFontSize)
+            } else {
+                titleLabel.font = UIFont.systemFont(ofSize: normalTextFontSize)
             }
         }
     }
     
     private func updateTitleTransform(selected: Bool) {
-        let selectedTextFontSize = selectedTextFont.pointSize
-        let normalTextFontSize = normalTextFont.pointSize
         let scale: CGFloat
         if selectedTextFontSize > normalTextFontSize {
             scale = normalTextFontSize / selectedTextFontSize
@@ -98,7 +110,7 @@ extension TabItemCell {
             } else {
                 titleLabel.transform = CGAffineTransform.init(scaleX: scale, y: scale)
             }
-        } else {
+        } else if selectedTextFontSize < normalTextFontSize {
             scale = selectedTextFontSize / normalTextFontSize
             
             if selected {
@@ -132,27 +144,3 @@ extension TabItemCell: TabItem {
         updateTitleColor(selected: selected)
     }
 }
-
-private extension UIColor {
-    var components: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
-        let components = self.cgColor.components!
-        
-        switch components.count == 2 {
-        case true : return (r: components[0], g: components[0], b: components[0], a: components[1])
-        case false: return (r: components[0], g: components[1], b: components[2], a: components[3])
-        }
-    }
-    
-    static func interpolate(from fromColor: UIColor, to toColor: UIColor, with progress: CGFloat) -> UIColor {
-        let fromComponents = fromColor.components
-        let toComponents = toColor.components
-        
-        let r = (1 - progress) * fromComponents.r + progress * toComponents.r
-        let g = (1 - progress) * fromComponents.g + progress * toComponents.g
-        let b = (1 - progress) * fromComponents.b + progress * toComponents.b
-        let a = (1 - progress) * fromComponents.a + progress * toComponents.a
-        
-        return UIColor(red: r, green: g, blue: b, alpha: a)
-    }
-}
-

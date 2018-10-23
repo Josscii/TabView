@@ -86,17 +86,6 @@ public enum TabViewWidthType {
     case selfSizing
 }
 
-/// the update point when tab item or indicator is not udpate by gesture
-///
-/// - begin: when transition begin
-/// - middle: when transition progress exceed middle
-/// - end: when transition end
-public enum TabViewNoneGestureDrivenUpdatePoint {
-    case begin
-    case middle
-    case end
-}
-
 public class TabView: UIView {
     // MARK: - public properties
     /// TabView's delegate
@@ -109,8 +98,6 @@ public class TabView: UIView {
     public var isIndicatorGestureDriven = false
     /// if the item's properties with gesture movement
     public var isItemGestureDriven = false
-    /// when will tab view update state in gesture mode
-    public var noneGestureGrivenUpdateMode: TabViewNoneGestureDrivenUpdatePoint = .middle
     /// current selected index
     public private(set) var selectedIndex = 0
     
@@ -127,8 +114,6 @@ public class TabView: UIView {
     private let coordinatedScrollView: UIScrollView
     /// if is first init, a flag for some configuration
     private var isFirstInit = true
-    /// last coordinatedScrollView's contentOffset x
-    private var lastContentOffsetX: CGFloat = 0
     
     // MARK: - init
     public init(frame: CGRect, coordinatedScrollView: UIScrollView) {
@@ -217,11 +202,6 @@ public extension TabView {
     /// convience method for register cell
     public func register(_ cellClass: Swift.AnyClass?, forCellWithReuseIdentifier identifier: String) {
         collectionView.register(cellClass, forCellWithReuseIdentifier: identifier)
-    }
-    
-    /// convience method for register cell
-    public func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
-        collectionView.register(nib, forCellWithReuseIdentifier: identifier)
     }
     
     /// convience method for dequeue cell
@@ -317,48 +297,18 @@ extension TabView {
                 let progress = (0.5 - abs(0.5 - decimal)) * 2
                 updateIndicatorView(with: progress)
             } else {
-                if noneGestureGrivenUpdateMode == .middle {
-                    if decimal >= 0.5 {
-                        UIView.animate(withDuration: animationDuration) {
-                            if let frame1 = self.frameForCell(at: index1) {
-                                self.indicatorSuperView.frame = frame1
-                                self.indicatorSuperView.layoutIfNeeded()
-                            }
-                        }
-                    } else {
-                        UIView.animate(withDuration: animationDuration) {
-                            if let frame0 = self.frameForCell(at: index0) {
-                                self.indicatorSuperView.frame = frame0
-                                self.indicatorSuperView.layoutIfNeeded()
-                            }
+                if decimal >= 0.5 {
+                    UIView.animate(withDuration: animationDuration) {
+                        if let frame1 = self.frameForCell(at: index1) {
+                            self.indicatorSuperView.frame = frame1
+                            self.indicatorSuperView.layoutIfNeeded()
                         }
                     }
                 } else {
-                    var shouldBegin = false
-                    
-                    if noneGestureGrivenUpdateMode == .begin {
-                        shouldBegin = true
-                    } else if noneGestureGrivenUpdateMode == .end {
-                        if coordinatedScrollView.isDecelerating && !coordinatedScrollView.isTracking {
-                            shouldBegin = true
-                        }
-                    }
-                    
-                    if shouldBegin {
-                        if lastContentOffsetX > contentOffsetX {
-                            UIView.animate(withDuration: animationDuration) {
-                                if let frame = self.frameForCell(at: index0) {
-                                    self.indicatorSuperView.frame = frame
-                                    self.indicatorSuperView.layoutIfNeeded()
-                                }
-                            }
-                        } else if lastContentOffsetX < contentOffsetX {
-                            UIView.animate(withDuration: animationDuration) {
-                                if let frame = self.frameForCell(at: index1) {
-                                    self.indicatorSuperView.frame = frame
-                                    self.indicatorSuperView.layoutIfNeeded()
-                                }
-                            }
+                    UIView.animate(withDuration: animationDuration) {
+                        if let frame0 = self.frameForCell(at: index0) {
+                            self.indicatorSuperView.frame = frame0
+                            self.indicatorSuperView.layoutIfNeeded()
                         }
                     }
                 }
@@ -369,37 +319,13 @@ extension TabView {
                 // update the tabItems, decimal 0...1
                 updateTabItem(from: index0, to: index1, with: decimal)
             } else {
-                if noneGestureGrivenUpdateMode == .middle {
-                    if decimal >= 0.5 {
-                        UIView.animate(withDuration: animationDuration) {
-                            self.updateTabItem(from: index0, to: index1, with: 1)
-                        }
-                    } else {
-                        UIView.animate(withDuration: animationDuration) {
-                            self.updateTabItem(from: index0, to: index1, with: 0)
-                        }
+                if decimal >= 0.5 {
+                    UIView.animate(withDuration: animationDuration) {
+                        self.updateTabItem(from: index0, to: index1, with: 1)
                     }
                 } else {
-                    var shouldBegin = false
-                    
-                    if noneGestureGrivenUpdateMode == .begin {
-                        shouldBegin = true
-                    } else if noneGestureGrivenUpdateMode == .end {
-                        if coordinatedScrollView.isDecelerating && !coordinatedScrollView.isTracking {
-                            shouldBegin = true
-                        }
-                    }
-                    
-                    if shouldBegin {
-                        if lastContentOffsetX > contentOffsetX {
-                            UIView.animate(withDuration: animationDuration) {
-                                self.updateTabItem(from: index0, to: index1, with: 0)
-                            }
-                        } else if lastContentOffsetX < contentOffsetX {
-                            UIView.animate(withDuration: animationDuration) {
-                                self.updateTabItem(from: index0, to: index1, with: 1)
-                            }
-                        }
+                    UIView.animate(withDuration: animationDuration) {
+                        self.updateTabItem(from: index0, to: index1, with: 0)
                     }
                 }
             }
@@ -408,8 +334,6 @@ extension TabView {
             let index = decimal > 0.5 ? index1 : index0
             scrollToItem(at: index)
         }
-        
-        lastContentOffsetX = contentOffsetX
     }
     
     /// the progress is alaways 0->1->0
