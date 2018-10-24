@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let items = ["苹果", "葡萄", "香蕉", "西瓜", "芒果", "梨", "哈密瓜", "橙子", "椰子", "石榴"]
+    let items = ["哈密瓜", "苹果", "葡萄", "香蕉", "西瓜", "芒果", "梨", "橙子", "椰子", "石榴"]
     
     var scrollView: UIScrollView!
     
@@ -50,13 +50,10 @@ class ViewController: UIViewController {
         tabView2.register(TabItemCell.self, forCellWithReuseIdentifier: TabItemCell.reuseIdentifier)
         view.addSubview(tabView2)
         
-        tabView3 = WYTabView(frame: CGRect(x: 0, y: 200, width: view.bounds.width, height: 60), coordinatedScrollView: scrollView)
+        tabView3 = WYTabView(frame: CGRect(x: 0, y: 180, width: view.bounds.width, height: 60), coordinatedScrollView: scrollView)
         tabView3.delegate = self
         tabView3.backgroundColor = .brown
-        tabView3.widthType = .fixed
-        tabView3.fixedWidth = 80
-        tabView3.isItemGestureDriven = true
-        tabView3.isIndicatorGestureDriven = true
+        tabView3.widthType = .selfSizing
         tabView3.register(WYTabItemCell.self, forCellWithReuseIdentifier: WYTabItemCell.reuseIdentifer())
         view.addSubview(tabView3)
     }
@@ -93,7 +90,14 @@ extension ViewController: WYTabViewDelegate {
     
     func tabView(_ tabView: WYTabView, didSelectItemAt index: Int) {
         scrollView.setContentOffset(CGPoint(x: view.bounds.width * CGFloat(index), y: 0), animated: false)
-        tabView.selectItem(at: index)
+        
+        if tabView2.selectedIndex != index {
+            tabView2.select(itemAt: index)
+        }
+        
+        if tabView1.selectedIndex != index {
+            tabView1.select(itemAt: index)
+        }
     }
     
     func tabView(_ tabView: WYTabView, indicatorWithSuperView superView: UIView) -> UIView {

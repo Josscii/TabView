@@ -375,14 +375,18 @@ extension TabView: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                willDisplay cell: UICollectionViewCell,
                                forItemAt indexPath: IndexPath) {
-        if isFirstInit && indexPath.item == 0 {
+        if isFirstInit {
             defer {
                 isFirstInit = false
             }
             
             // init indicatorViews
-            indicatorSuperView.frame = cell.frame
-            indicatorView = delegate?.tabView(self, indicatorViewWith: indicatorSuperView)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let frame = self.frameForCell(at: 0) {
+                    self.indicatorSuperView.frame = frame
+                    self.indicatorView = self.delegate?.tabView(self, indicatorViewWith: self.indicatorSuperView)
+                }
+            }
         }
     }
     
