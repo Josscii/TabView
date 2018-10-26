@@ -10,7 +10,6 @@
 
 @interface WYTabView () <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (nonatomic, assign) NSInteger selectedIndex;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *collectionViewLayout;
 @property (nonatomic, strong) UIView *indicatorSuperView;
@@ -174,8 +173,7 @@
             CGFloat iheight = frame0.size.height;
             self.indicatorSuperView.frame = CGRectMake(ix, iy, iwidth, iheight);
             
-            CGFloat progress = (0.5 - ABS(0.5 - decimal)) * 2;
-            [self updateIndicatorViewWithProgress:progress];
+            [self updateIndicatorViewWithProgress:decimal];
         } else {
             if (decimal >= 0.5) {
                 [UIView animateWithDuration:self.animationDuration animations:^{

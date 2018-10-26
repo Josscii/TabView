@@ -293,9 +293,8 @@ extension TabView {
                     indicatorSuperView.frame = CGRect(x: ix, y: iy, width: iwidth, height: iheight)
                 }
                 
-                // update the indicator, progress 0...1...0
-                let progress = (0.5 - abs(0.5 - decimal)) * 2
-                updateIndicatorView(with: progress)
+                // update the indicator, progress 0->1
+                updateIndicatorView(with: decimal)
             } else {
                 if decimal >= 0.5 {
                     UIView.animate(withDuration: animationDuration) {
@@ -336,7 +335,7 @@ extension TabView {
         }
     }
     
-    /// the progress is alaways 0->1->0
+    /// the progress is alaways 0->1
     private func updateIndicatorView(with progress: CGFloat) {
         delegate?.tabView(self, update: indicatorView, with: progress)
     }

@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, WYTabViewWidthType) {
 @property (nonatomic, assign) CGFloat FixedWidth;
 @property (nonatomic, assign) BOOL isIndicatorGestureDriven;
 @property (nonatomic, assign) BOOL isItemGestureDriven;
+@property (nonatomic, assign) NSInteger selectedIndex;
 
 - (instancetype)initWithFrame:(CGRect)frame coordinatedScrollView:(UIScrollView *)scrollView;
 - (void)reloadData;

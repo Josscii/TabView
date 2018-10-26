@@ -140,9 +140,17 @@ extension ViewController: TabViewDelegate {
             if tabView2.selectedIndex != index {
                 tabView2.select(itemAt: index)
             }
+            
+            if tabView3.selectedIndex != index {
+                tabView3.selectItem(at: index)
+            }
         } else {
             if tabView1.selectedIndex != index {
                 tabView1.select(itemAt: index)
+            }
+            
+            if tabView3.selectedIndex != index {
+                tabView3.selectItem(at: index)
             }
         }
     }
@@ -177,7 +185,8 @@ extension ViewController: TabViewDelegate {
                     return
             }
             
-            let w = 10 + (30 - 10) * progress
+            let p = (0.5 - abs(0.5 - progress)) * 2
+            let w = 10 + (30 - 10) * p
             let centerX = indicatorSuperView.frame.width / 2
             
             indicatorView.frame.size.width = w
