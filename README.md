@@ -13,11 +13,6 @@
 
 `isItemGestureDriven`，tab item 是否会随着 coordinatedScrollView 的滚动而移动，默认为 false，当滚动进度大于百分之50时改变状态。
 
-`noneGestureGrivenUpdateMode`, 当前面两个值为 false 时，tab item 或者 indicator 的改变时机：
-- begin 一开始就变化。
-- middle 超过一半时变化。
-- 结束时变化。
-
 ---
 
 **TabItem** 是一个 protocol，它提供了一些方法供自定义 tab item。
@@ -40,7 +35,7 @@
 
 `tabView(_:indicatorViewWith:)`，创建 indicator，注意 indicator 必须加到 indicatorSuperView 上。
 
-`tabView(_:update:with:)`，随 coordinatedScrollView 滚动更新 indicator 的回调，progress 的变化区间为 0->1->0。
+`tabView(_:update:with:)`，随 coordinatedScrollView 滚动更新 indicator 的回调，progress 的变化区间为 0->1。
 
 ---
 
