@@ -380,7 +380,7 @@ extension TabView: UICollectionViewDataSource {
             }
             
             // init indicatorViews
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 if let frame = self.frameForCell(at: 0) {
                     self.indicatorSuperView.frame = frame
                     self.indicatorView = self.delegate?.tabView(self, indicatorViewWith: self.indicatorSuperView)

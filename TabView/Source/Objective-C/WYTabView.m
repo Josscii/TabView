@@ -240,7 +240,7 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isFirstInit) {
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.indicatorSuperView.frame = [self frameForCellAtIndex:0];
             self.indicatorView = [self.delegate tabView:self indicatorWithSuperView:self.indicatorSuperView];
         });
