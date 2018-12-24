@@ -15,7 +15,6 @@
 @property (nonatomic, strong) UIView *indicatorSuperView;
 @property (nonatomic, strong) UIView *indicatorView;
 @property (nonatomic, strong) UIScrollView *coordinatedScrollView;
-@property (nonatomic, assign) BOOL isFirstInit;
 
 @end
 
@@ -24,7 +23,6 @@
 - (instancetype)initWithFrame:(CGRect)frame
         coordinatedScrollView:(UIScrollView *)scrollView {
     if (self = [super initWithFrame:frame]) {
-        _isFirstInit = YES;
         _animationDuration = 0.25;
         _coordinatedScrollView = scrollView;
         [self setupViews];
@@ -41,7 +39,7 @@
     _collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
     _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:_collectionViewLayout];
-    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     _collectionView.backgroundColor = [UIColor clearColor];
@@ -54,6 +52,11 @@
     _indicatorSuperView = [[UIView alloc] init];
     _indicatorSuperView.layer.zPosition = -1;
     [_collectionView addSubview:_indicatorSuperView];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.indicatorSuperView.frame = [self frameForCellAtIndex:0];
+        self.indicatorView = [self.delegate tabView:self indicatorWithSuperView:self.indicatorSuperView];
+    });
 }
 
 - (void)layoutSubviews {
@@ -236,18 +239,6 @@
 }
 
 #pragma mark - UICollectionViewDataSource
-
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isFirstInit) {
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.indicatorSuperView.frame = [self frameForCellAtIndex:0];
-            self.indicatorView = [self.delegate tabView:self indicatorWithSuperView:self.indicatorSuperView];
-        });
-        
-        self.isFirstInit = false;
-    }
-}
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSAssert(self.delegate != nil, @"delegate must not be nil");

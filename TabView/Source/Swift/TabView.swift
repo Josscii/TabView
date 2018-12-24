@@ -9,7 +9,7 @@
 import UIKit
 
 /// TabView's delegate protocol
-public protocol TabViewDelegate: class {
+public protocol TabViewDelegate: AnyObject {
     /// number of items in tabView, required
     ///
     /// - Parameter tabView: tabView
@@ -112,8 +112,6 @@ public class TabView: UIView {
     private var indicatorView: UIView?
     /// the scrollView assioated with tabView
     private let coordinatedScrollView: UIScrollView
-    /// if is first init, a flag for some configuration
-    private var isFirstInit = true
     
     // MARK: - init
     public init(frame: CGRect, coordinatedScrollView: UIScrollView) {
@@ -153,6 +151,14 @@ public class TabView: UIView {
         indicatorSuperView = UIView()
         indicatorSuperView.layer.zPosition = -1
         collectionView.addSubview(indicatorSuperView)
+
+        // delay the indicator layout for correctness
+        DispatchQueue.main.async {
+            if let frame = self.frameForCell(at: 0) {
+                self.indicatorSuperView.frame = frame
+                self.indicatorView = self.delegate?.tabView(self, indicatorViewWith: self.indicatorSuperView)
+            }
+        }
     }
     
     override public func layoutSubviews() {
@@ -364,31 +370,13 @@ extension TabView {
 
 // MARK: - UICollectionViewDelegate
 extension TabView: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    private func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         select(itemAt: indexPath.item)
     }
 }
 
 // MARK: - UICollectionViewDataSource
 extension TabView: UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView,
-                               willDisplay cell: UICollectionViewCell,
-                               forItemAt indexPath: IndexPath) {
-        if isFirstInit {
-            defer {
-                isFirstInit = false
-            }
-            
-            // init indicatorViews
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                if let frame = self.frameForCell(at: 0) {
-                    self.indicatorSuperView.frame = frame
-                    self.indicatorView = self.delegate?.tabView(self, indicatorViewWith: self.indicatorSuperView)
-                }
-            }
-        }
-    }
-    
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
         guard let delegate = delegate else {
